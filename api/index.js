@@ -20,7 +20,13 @@ mongoose.connect(process.env.MONGO_URI)
 const app=express();
 
 //Enable cors for all routes
-app.use(cors());
+const corsOptions = {
+    origin: 'http://localhost:5173', // Replace with your client's actual origin
+    credentials: true,
+  };
+  
+  app.use(cors(corsOptions));
+// app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));

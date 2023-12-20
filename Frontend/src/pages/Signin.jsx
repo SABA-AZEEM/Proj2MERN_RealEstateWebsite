@@ -19,8 +19,8 @@ export default function Signin() {
   };
 
   const handleSubmit = async (e)=>{
+    e.preventDefault();
     try{
-      e.preventDefault();
       dispatch(signInStart());
       const res = await fetch('http://localhost:3000/api/auth/signin',{
         method:"POST",
@@ -28,8 +28,10 @@ export default function Signin() {
           'Content-Type':'application/json',
         },
         body: JSON.stringify(formData),
+        credentials: 'include',
       });
       const data = await res.json();
+      
       if(data.success===false){
         dispatch(signInFailure(data.message));
         return;

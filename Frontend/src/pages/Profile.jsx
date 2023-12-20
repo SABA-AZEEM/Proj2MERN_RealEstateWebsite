@@ -4,6 +4,7 @@ import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/st
 import { app } from "../firebase";
 import { updateUserStart,updateUserSuccess,updateUserFailure } from "../redux/user/userSlice";
 
+
 export default function Profile() {
 
   const fileRef = useRef(null);
@@ -14,6 +15,7 @@ export default function Profile() {
   const [formData,setFormData] = useState({});
   const [updateSuccess,setUpdateSuccess] = useState(false);
   const dispatch = useDispatch();
+  
   
   
   //When changes is made in file's state, then handleFileUplad is called
@@ -57,13 +59,14 @@ export default function Profile() {
     e.preventDefault();
     try{
       dispatch(updateUserStart());
-      console.log(formData)
+      console.log(currentUser);
       const res = await fetch(`http://localhost:3000/api/user/update/${currentUser._id}`,{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
+        credentials: 'include',
       });
       const data = await res.json();
       if(data.success === false) {
