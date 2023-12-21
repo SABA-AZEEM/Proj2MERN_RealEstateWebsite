@@ -21,12 +21,12 @@ const app=express();
 
 //Enable cors for all routes
 const corsOptions = {
-    origin: 'http://localhost:5173', // Replace with your client's actual origin
+    origin: 'http://localhost:5173', 
     credentials: true,
   };
   
   app.use(cors(corsOptions));
-// app.use(cors());
+
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
