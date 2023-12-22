@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage';
 import { app } from "../firebase";
 import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutFailure, signOutStart, signOutSuccess} from "../redux/user/userSlice";
+import { Link } from 'react-router-dom';
 
 
 export default function Profile() {
@@ -183,6 +184,9 @@ export default function Profile() {
         >
           {loading ? 'Loading...' : 'update'}
         </button>
+        <Link to={'/create-listing'} className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95">
+          create listing
+        </Link>
 
       </form>
 
