@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {app} from '../firebase.js';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import {useSelector} from 'react-redux';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 
 
-const CreateListing = () => {
+const UpdateListing = () => {
 
     const { currentUser } = useSelector((state)=>state.user);
     const navigate = useNavigate();
+    const params = useParams();
     const [files,setFiles] = useState([]);
     const [formData, setFormData] = useState({
         imageUrls:[],
@@ -24,11 +25,25 @@ const CreateListing = () => {
         type:'rent',
         offer:false,
     });
-    console.log(formData);
+    
     const [imageUploadError, setImageUploadError] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [error,setError] = useState(false);
     const [loading,setLoading] = useState(false);
+
+    useEffect(()=>{
+        const fetchListing = async () =>{
+            const listingId = params.listingId;
+            const res = await fetch(`/api/listing/get/${listingId}`);
+            const data = await res.json();
+            if(data.success === false){
+                console.log(data.message);
+                return;
+            }
+            setFormData(data);
+        }
+        fetchListing();
+    },[])
 
     //Functions for upload image
     const handleImageSubmit = (e) => {
@@ -129,7 +144,7 @@ const CreateListing = () => {
                 return setError('Discount price must be lower than regular price');
             setLoading(true);
             setError(false);
-            const res = await fetch('/api/listing/create',{
+            const res = await fetch(`/api/listing/update/${params.listingId}`,{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -142,10 +157,11 @@ const CreateListing = () => {
             });
             const data = await res.json();
             setLoading(false);
+            
             if (data.success === false) {
                 setError(data.message);
             }
-            navigate(`/listing/${data._id}`);
+            navigate(`/listing/${params.listingId}`);
         }catch(error){
             setError(error.message);
             setLoading(false);
@@ -155,7 +171,7 @@ const CreateListing = () => {
   return (
     <main className='p-3 max-w-4xl mx-auto'>
         <h1 className='text-3xl font-semibold text-center my-7'>
-            Create a Listing
+            Update a Listing
         </h1>
         <form onSubmit={handleSubmit} className='flex flex-col sm:flex-row gap-4'>
 
@@ -352,7 +368,7 @@ const CreateListing = () => {
                     className='p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'
                     disabled={loading || uploading}
                 >
-                    {loading ? 'Creating...' : 'Create Listing'}
+                    {loading ? 'Updating...' : 'Update Listing'}
                 </button>
                 {error && <p className='text-red-700 text-sm'>{error}</p>}
             </div>
@@ -362,4 +378,4 @@ const CreateListing = () => {
   )
 }
 
-export default CreateListing
+export default UpdateListing
