@@ -51,7 +51,7 @@ export const updateListing = async (req,res,next) => {
             req.body,
             {new:true}
         );
-        res.status(200).json('listing is update');
+        res.status(200).json(updateListing);
     }catch(error){
         next(error);
     }
