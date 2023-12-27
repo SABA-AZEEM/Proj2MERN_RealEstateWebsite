@@ -61,7 +61,7 @@ export const getUserListings = async (req,res,next) => {
     }
 };
 
-//Function for get particular user email
+//Function for get particular user 
 export const getUser = async(req,res,next) => {
     try{
         const user = await User.findById(req.params.id);
