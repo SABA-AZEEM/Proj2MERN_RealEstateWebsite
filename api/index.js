@@ -6,6 +6,8 @@ import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.route.js";
 import userRouter from './routes/user.route.js';
 import listingRouter from './routes/listing.route.js';
+//use for deploy process
+import path from 'path';
 
 
 dotenv.config();
@@ -17,6 +19,9 @@ mongoose.connect(process.env.MONGO_URI)
 .catch((error)=>{
     console.log(error.message);
 });
+
+//use for deploy process
+const __dirname = path.resolve();
 
 const app=express();
 
@@ -41,6 +46,13 @@ app.listen(3000,()=>{
 app.use('/api/auth',authRouter);
 app.use('/api/user',userRouter);
 app.use('/api/listing',listingRouter);
+
+//use for deploy process
+app.use(express.static(path.join(__dirname, '/Frontend/dist')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Frontend', 'dist', 'index.html'));
+  })
+
 
 //middleware for handle possible errors
 app.use((err,req,res,next)=>{
